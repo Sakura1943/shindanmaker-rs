@@ -8,7 +8,7 @@ use card::Card;
 
 /// # The method to achieve information from api
 /// *parameters:* name: `&str` <br>
-/// *return:* `anyhow::Result<utils::Card>` (the result from this api)
+/// *return:* `anyhow::Result<utils::Card>` (the result from target api)
 /// ## example:
 /// *if return anyhow::Result:*
 /// ```rust
@@ -28,7 +28,7 @@ use card::Card;
 /// }
 /// ```
 ///
-pub async fn get<'a>(name: &str) -> anyhow::Result<Card> {
+pub async fn get(name: &str) -> anyhow::Result<Card> {
     // TODO: create reqwest client
     let client = reqwest::Client::builder()
         .cookie_store(true)
