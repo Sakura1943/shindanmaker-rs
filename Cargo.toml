@@ -1,6 +1,6 @@
 [package]
 name = "shindanmaker-rs"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 authors = ["sakunia <sakunia@foxmail.com>"]
 description = "Shindanmaker in Rust"

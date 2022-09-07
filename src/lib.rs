@@ -1,5 +1,4 @@
 mod error;
-use std::borrow::Cow;
 use std::collections::HashMap;
 use reqwest::header::HeaderMap;
 use scraper::{Html, Selector};
