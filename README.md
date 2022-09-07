@@ -1,11 +1,16 @@
 # Shindanmaker in Rust
-A library to visit `https://en.shindanmaker.com/917962`, and use method `get` to achieve data.
+A library to visit [https://en.shindanmaker.com/917962](https://en.shindanmaker.com/917962), and use method `get` to achieve data.
 
 ## 📔 Usage
 Make sure you activated the shindanmaker-rs crate on Cargo.toml
 ```toml
 tokio = { version = "1.21.0", features = ["full"] }
 shindanmaker-rs = { version = "0.1.7" }
+```
+or serde support
+```toml
+tokio = { version = "1.21.0", features = ["full"] }
+shindanmaker-rs = { version = "0.1.7", features = ["serde"] }
 ```
 Then, on your main.rs:
 ```rust
