@@ -15,7 +15,6 @@ clap = { version = "3.2.20", features = ["derive"] }
 reqwest = { version = "0.11.11", features = ["json", "cookies"] }
 scraper = "0.13.0"
 thiserror = "1.0.34"
-tokio = { version = "1.21.0", features = ["full"] }
 
 [lib]
 name = "shindanmaker"
