@@ -35,16 +35,16 @@ impl Display for Card {
         } = self;
         write!(
             f,
-            "{name},
-性别: {sex},
-种族: {race},
-性格: {character},
-天赋能力: {talent},
-阵营: {camp},
-爱好: {hobby},
-发色: {hair},
-瞳色: {pupil},
-危险度: {danger},
+            "{name}
+性别: {sex}
+种族: {race}
+性格: {character}
+天赋能力: {talent}
+阵营: {camp}
+爱好: {hobby}
+发色: {hair}
+瞳色: {pupil}
+危险度: {danger}
 幸运: {lucky}"
         )
     }
