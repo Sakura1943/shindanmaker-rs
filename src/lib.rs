@@ -14,7 +14,7 @@ use card::Card;
 /// ```rust
 /// #[tokio::main]
 /// async fn main() -> anyhow::Result<()> {
-///   let result = shindanmaker_rs::get("demo")?;
+///   let result = shindanmaker_rs::get("demo").await?;
 ///   println!("{}", result);
 ///   Ok(())
 /// }
@@ -23,7 +23,7 @@ use card::Card;
 /// ```rust
 /// #[tokio::main]
 /// async fn main() {
-///   let result = shindanmaker_rs::get("demo").unwrap();
+///   let result = shindanmaker_rs::get("demo").await.unwrap();
 ///   println!("{}", result);
 /// }
 /// ```
