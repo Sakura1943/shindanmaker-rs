@@ -1,0 +1,21 @@
+[package]
+name = "shindanmaker-rs"
+version = "0.1.0"
+edition = "2021"
+authors = ["sakunia <sakunia@foxmail.com>"]
+description = "Shindanmaker in Rust"
+license = "MIT"
+repository = "https://github.com/Sakura1943/shindanmaker-rs"
+documentation = "https://docs.rs/shindanmaker-rs/latest/shindanmaker"
+readme = "README.md"
+
+[dependencies]
+anyhow = "1.0.64"
+clap = { version = "3.2.20", features = ["derive"] }
+reqwest = { version = "0.11.11", features = ["json", "cookies"] }
+scraper = "0.13.0"
+thiserror = "1.0.34"
+tokio = { version = "1.21.0", features = ["full"] }
+
+[lib]
+name = "shindanmaker"
