@@ -1,10 +1,10 @@
 pub mod error;
-pub mod utils;
+pub mod card;
 use std::collections::HashMap;
 use reqwest::header::HeaderMap;
 use scraper::{Html, Selector};
 use error::Error;
-use utils::Card;
+use card::Card;
 
 /// # The method to achieve information from api
 /// *parameters:* name: `&str` <br>
@@ -101,7 +101,7 @@ pub async fn get<'a>(name: &str) -> anyhow::Result<Card> {
     for item in fragment.select(&selector) {
         // TODO: filter the text of the element with id shindanName
         if Some("shindanResult") == item.value().attr("id") {
-            // TODO: traverse the list achieved by the text of the element with id shindanName
+            // TODO: insert item into list
             for item in item.text().to_owned() {
                 if index == 6 || index == 0 {
                     info_list.push(item.to_owned());
@@ -115,7 +115,9 @@ pub async fn get<'a>(name: &str) -> anyhow::Result<Card> {
             }
         }
     }
-    let result = Card {
+
+    // TODO: make a card
+    let card = Card {
         name: name.to_owned(),
         sex: info_list[1].to_owned(),
         race: info_list[2].to_owned(),
@@ -128,5 +130,5 @@ pub async fn get<'a>(name: &str) -> anyhow::Result<Card> {
         danger: info_list[9].to_owned(),
         lucky: info_list[10].to_owned(),
     };
-    Ok(result)
+    Ok(card)
 }
