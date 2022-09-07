@@ -5,7 +5,7 @@ A library to visit `https://en.shindanmaker.com/917962`, and use method `get` to
 Make sure you activated the shindanmaker-rs crate on Cargo.toml
 ```toml
 tokio = { version = "1.21.0", features = ["full"] }
-shindanmaker-rs = { version = "0.1.4" }
+shindanmaker-rs = { version = "0.1.5" }
 ```
 Then, on your main.rs:
 ```rust
