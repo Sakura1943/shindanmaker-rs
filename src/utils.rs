@@ -25,19 +25,17 @@ pub struct Card
 impl Display for Card
 {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, r#"{{
-    {},
-    性别: {},
-    种族: {},
-    性格: {},
-    天赋能力: {},
-    阵营: {},
-    爱好: {},
-    发色: {},
-    瞳色: {},
-    危险度: {},
-    幸运: {}
-}}"#,
+    write!(f, "{},
+性别: {},
+种族: {},
+性格: {},
+天赋能力: {},
+阵营: {},
+爱好: {},
+发色: {},
+瞳色: {},
+危险度: {},
+幸运: {}",
     self.name,
     self.sex,
     self.race,
