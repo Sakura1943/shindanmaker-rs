@@ -5,12 +5,12 @@ A library to visit [https://en.shindanmaker.com/917962](https://en.shindanmaker.
 Make sure you activated the shindanmaker-rs crate on Cargo.toml
 ```toml
 tokio = { version = "1.21.0", features = ["full"] }
-shindanmaker-rs = { version = "0.1.9" }
+shindanmaker-rs = { version = "0.2.0" }
 ```
 or serde support
 ```toml
 tokio = { version = "1.21.0", features = ["full"] }
-shindanmaker-rs = { version = "0.1.9", features = ["serde"] }
+shindanmaker-rs = { version = "0.2.0", features = ["serde"] }
 ```
 Then, on your main.rs:
 ```rust
