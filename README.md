@@ -21,7 +21,8 @@ or
 ```rust
 use shindanmaker::get;
 
-fn main() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
   let result = get("demo").await?;
   println!("{}", result);
   Ok(())
