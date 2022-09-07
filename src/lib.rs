@@ -5,7 +5,7 @@ use scraper::{Html, Selector};
 use error::Error;
 
 /// # The method to achieve information from api
-/// *parameters:* name: `impl Into<Cow<'a, std>>` (str or String)<br>
+/// *parameters:* name: `&str` <br>
 /// *return:* `anyhow::Result<String>` (the result from this api)
 /// ## example:
 /// *if return anyhow::Result:*
@@ -93,7 +93,6 @@ pub async fn get<'a>(name: &str) -> anyhow::Result<String> {
     let selector = Selector::parse("span").map_err(|_| Error::GetElementTextErr)?;
 
     // TODO: initialize result(Type &str)
-
     let mut result = String::new();
 
     // TODO: traverse the list achieved by the selector
