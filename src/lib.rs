@@ -121,7 +121,7 @@ pub async fn get<'a>(name: &str) -> anyhow::Result<Card> {
         name: name.to_owned(),
         sex: info_list[1].to_owned(),
         race: info_list[2].to_owned(),
-        charactor: info_list[3].to_owned(),
+        character: info_list[3].to_owned(),
         talent: info_list[4].to_owned(),
         camp: info_list[5].to_owned(),
         hobby: info_list[6].to_owned(),
