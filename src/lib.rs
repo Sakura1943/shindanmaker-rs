@@ -27,10 +27,7 @@ use error::Error;
 /// }
 /// ```
 ///
-pub async fn get<'a>(name: impl Into<Cow<'a, str>>) -> anyhow::Result<String> {
-    // TODO: change the typpe of `name` to `String`
-    let name = name.into().to_string();
-
+pub async fn get<'a>(name: &str) -> anyhow::Result<String> {
     // TODO: create reqwest client
     let client = reqwest::Client::builder()
         .cookie_store(true)
@@ -80,7 +77,7 @@ pub async fn get<'a>(name: impl Into<Cow<'a, str>>) -> anyhow::Result<String> {
 
     // TODO; insert _token, shindanName and hiddenName into json_data(Type: HashMap)
     json_data.insert("_token", token.as_str());
-    json_data.insert("shindanName", &*name);
+    json_data.insert("shindanName", name);
     json_data.insert("hiddenName", hidden_name.as_str());
 
     // TODO: achieve html content (It is used to achieve result) (Method: post)
