@@ -1,7 +1,9 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::fmt::Display;
 
+use std::fmt::{self, Display, Formatter};
+
+/// The diagnosis information from `https://en.shindanmaker.com/917962` .
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub struct Card {
@@ -19,7 +21,7 @@ pub struct Card {
 }
 
 impl Display for Card {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let Self {
             name,
             sex,
@@ -33,6 +35,7 @@ impl Display for Card {
             danger,
             lucky,
         } = self;
+
         write!(
             f,
             "{name}
