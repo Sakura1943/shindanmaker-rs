@@ -122,7 +122,7 @@ async fn common_func(page_id: i64, name: &str) -> Result<(Html, Selector)> {
                 args.insert("hiddenName", hidden_name);
             },
 
-            _ => {},
+            _ => continue,
         }
     }
     // achieve html content (It is used to achieve result) (Method: post)
