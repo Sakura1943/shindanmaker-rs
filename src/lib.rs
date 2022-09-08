@@ -1,123 +1,96 @@
-pub mod error;
-pub mod card;
+mod card;
+
 use std::collections::HashMap;
-use reqwest::header::HeaderMap;
+use reqwest::{Client, header::{self, HeaderMap, HeaderValue}};
 use scraper::{Html, Selector};
-use error::Error;
-use card::Card;
 
-/// # The method to achieve information from api
-/// *parameters:* name: `&str` <br>
-/// *return:* `anyhow::Result<utils::Card>` (the result from target api)
-/// ## example:
-/// *if return anyhow::Result:*
-/// ```rust
-/// #[tokio::main]
-/// async fn main() -> anyhow::Result<()> {
-///   let result = shindanmaker_rs::get("demo").await?;
-///   println!("{}", result);
-///   Ok(())
-/// }
-/// ```
-/// *if return else or none:*
-/// ```rust
-/// #[tokio::main]
-/// async fn main() {
-///   let result = shindanmaker_rs::get("demo").await.unwrap();
-///   println!("{}", result);
-/// }
-/// ```
-///
-pub async fn get(name: &str) -> anyhow::Result<Card> {
-    // TODO: create reqwest client
-    let client = reqwest::Client::builder()
+pub use self::card::Card;
+pub use reqwest::Result;
+
+/// Fetch diagnosis information from `https://en.shindanmaker.com/917962` .
+pub async fn get(name: &str) -> Result<Card> {
+    let mut headers = HeaderMap::with_capacity(1);
+    headers.insert(
+        header::CONTENT_TYPE,
+        HeaderValue::from_static("application/x-www-form-urlencoded")
+    );
+
+    // create reqwest client
+    let client = Client::builder()
         .cookie_store(true)
-        .build()?;
+        .user_agent(
+            "Mozilla/5.0 (X11; Linux x86_64; rv:104.0) \
+             Gecko/20100101 Firefox/104.0")
+        .default_headers(headers)
+        .build()
+        .unwrap();
 
-    // TODO: define headers and json data to be sent (Type: HashMap)
-    let mut headers = HeaderMap::new();
-    let mut json_data = HashMap::new();
-
-    // TODO: insert header information
-    headers.insert("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:104.0) Gecko/20100101 Firefox/104.0".parse()?);
-    headers.insert("content-type", "application/x-www-form-urlencoded".parse()?);
-
-    // TODO: achieve html content (It is used to achieve token and hiddenName) (Method: get)
-    let res = client.get("https://en.shindanmaker.com/917962")
-        .headers(headers.clone())
+    // achieve html content (It is used to achieve token and hiddenName) (Method: get)
+    let resp = client.get("https://en.shindanmaker.com/917962")
         .send()
         .await?
         .text()
         .await?;
 
-    // TODO: achieve html fragment and selector
-    let fragment = Html::parse_document(&res);
-    let selector = Selector::parse("input").map_err(|_| Error::GetElementTextErr)?;
+    // achieve html fragment and selector
+    let fragment = Html::parse_document(&resp);
+    let selector = Selector::parse("input").unwrap();
 
-    // TODO: initialize token and hidden_name(Type: String)
-    let mut token = String::new();
-    let mut hidden_name = String::new();
+    let mut args = HashMap::with_capacity(3);
+    args.insert("shindanName", name);
 
-    // TODO: traverse the list achieved by the selector
-    for item in fragment.select(&selector) {
-        // TODO: filter elements named token and name
-        if item.value().attr("name") == Some("_token") {
-            // TODO: achieve _token
-            if let Some(_token) = item.value().attr("value") {
-                // TODO: assign _token to token
-                token = _token.to_owned();
-            }
-        } else if item.value().attr("name") == Some("hiddenName") {
-            // TODO: achieve hiddenName
-            if let Some(_hidden_name) = item.value().attr("value") {
-                // TODO: assign _hidden_name to hidden_name
-                hidden_name = _hidden_name.to_owned();
-            }
+    // traverse the list achieved by the selector
+    for element in fragment.select(&selector) {
+        let element = element.value();
+
+        match (element.attr("name"), element.attr("value")) {
+            (Some("_token"), Some(token)) => {
+                args.insert("_token", token);
+            },
+
+            (Some("hiddenName"), Some(hidden_name)) => {
+                args.insert("hiddenName", hidden_name);
+            },
+
+            _ => continue,
         }
     }
 
-    // TODO; insert _token, shindanName and hiddenName into json_data(Type: HashMap)
-    json_data.insert("_token", token.as_str());
-    json_data.insert("shindanName", name);
-    json_data.insert("hiddenName", hidden_name.as_str());
-
-    // TODO: achieve html content (It is used to achieve result) (Method: post)
-    let res = client.post("https://en.shindanmaker.com/917962")
-        .headers(headers)
-        .json(&json_data)
+    // achieve html content (It is used to achieve result) (Method: post)
+    let resp = client.post("https://en.shindanmaker.com/917962")
+        .json(&args)
         .send()
         .await?
         .text()
         .await?;
 
-    // TODO: achieve html fragment and selector
-    let fragment = Html::parse_document(&res);
-    let selector = Selector::parse("span").map_err(|_| Error::GetElementTextErr)?;
+    // achieve html fragment and selector
+    let fragment = Html::parse_document(&resp);
+    let selector = Selector::parse("span").unwrap();
 
-    // TODO: initialize info_list(Type Vec<String>)
-    let mut info_list: Vec<String> = Vec::new();
+    // initialize info_list
+    let mut info_list = Vec::new();
     let mut index = 0;
-    // TODO: traverse the list achieved by the selector
-    for item in fragment.select(&selector) {
-        // TODO: filter the text of the element with id shindanName
-        if Some("shindanResult") == item.value().attr("id") {
-            // TODO: insert item into list
-            for item in item.text().to_owned() {
-                if index == 6 || index == 0 {
-                    info_list.push(item.to_owned());
+
+    // traverse the list achieved by the selector
+    for element in fragment.select(&selector) {
+        // filter the text of the element with id shindanName
+        if let Some("shindanResult") = element.value().attr("id") {
+            // insert item into list
+            for item in element.text() {
+                if index == 0 || index == 6 {
+                    info_list.push(item);
                 } else {
-                    let right = item.split(":").last();
-                    if let Some(right) = right {
-                        info_list.push(right.to_string())
-                    }
+                    info_list.push(item.split(":").last().unwrap());
                 }
+
                 index += 1;
             }
         }
     }
 
-    // TODO: make a card
-    let card = Card {
+    // the simplest style
+    Ok(Card {
         name: name.to_owned(),
         sex: info_list[1].to_owned(),
         race: info_list[2].to_owned(),
@@ -129,6 +102,5 @@ pub async fn get(name: &str) -> anyhow::Result<Card> {
         pupil: info_list[8].to_owned(),
         danger: info_list[9].to_owned(),
         lucky: info_list[10].to_owned(),
-    };
-    Ok(card)
+    })
 }
