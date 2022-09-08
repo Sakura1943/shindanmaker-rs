@@ -51,7 +51,7 @@ pub async fn get(name: &str) -> Result<Card> {
     })
 }
 
-// get else page
+/// get else page
 pub async fn get_else(page_id: i64, name: &str) -> Result<String> {
     // achieve html fragment and selector
     let (fragment, selector) = common_func(page_id, name).await?;
