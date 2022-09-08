@@ -1,6 +1,6 @@
 # Shindanmaker Client
 
-A library to visit https://en.shindanmaker.com/917962 .
+A library to visit https://en.shindanmaker.com/917962 or https://en.shindanmaker.com/{page_id}.
 
 ## 📔 Usage
 
@@ -8,7 +8,7 @@ Add dependencies to `Cargo.toml`:
 
 ```toml
 tokio = { version = "1.21.0", features = ["macros", "rt-multi-thread"] }
-shindanmaker-rs = { version = "0.2.4" }
+shindanmaker-rs = { version = "0.2.5" }
 ```
 
 
