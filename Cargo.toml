@@ -1,8 +1,8 @@
 [package]
 name = "shindanmaker-rs"
-version = "0.2.7"
+version = "0.2.8"
 edition = "2021"
-authors = ["sakunia <sakunia@foxmail.com>"]
+authors = ["sakunia <sakunia@foxmail.com>", "Collide <three-dim-sky@foxmail.com>"]
 description = "Shindanmaker in Rust"
 license = "MIT"
 repository = "https://github.com/Sakura1943/shindanmaker-rs"

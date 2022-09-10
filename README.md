@@ -8,7 +8,7 @@ Add dependencies to `Cargo.toml`:
 
 ```toml
 tokio = { version = "1.21.0", features = ["macros", "rt-multi-thread"] }
-shindanmaker-rs = { version = "0.2.7" }
+shindanmaker-rs = { version = "0.2.8" }
 ```
 
 
