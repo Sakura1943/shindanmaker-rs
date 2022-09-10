@@ -3,7 +3,9 @@ use serde::{Deserialize, Serialize};
 
 use std::fmt::{self, Display, Formatter};
 
-/// The diagnosis information from `https://en.shindanmaker.com/917962` .
+/// The diagnosis information of [Persona Generator].
+///
+/// [Persona Generator]: https://en.shindanmaker.com/917962
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub struct Card {
