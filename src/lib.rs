@@ -2,7 +2,7 @@ mod card;
 
 use std::collections::HashMap;
 use once_cell::sync::Lazy;
-use reqwest::{Client, header::{self, HeaderMap, HeaderValue}};
+use reqwest::{Client, header::{self, HeaderMap, HeaderValue, USER_AGENT}};
 use scraper::{Html, Selector};
 
 pub use self::card::Card;
@@ -19,9 +19,7 @@ static CLIENT: Lazy<Client> = Lazy::new(||{
 
     Client::builder()
         .cookie_store(true)
-        .user_agent(
-            "Mozilla/5.0 (X11; Linux x86_64; rv:104.0) \
-             Gecko/20100101 Firefox/104.0")
+        .user_agent(USER_AGENT)
         .default_headers(headers)
         .build()
         .unwrap()
