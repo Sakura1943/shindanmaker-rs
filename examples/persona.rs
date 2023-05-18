@@ -3,7 +3,7 @@ use std::env::args;
 
 #[tokio::main]
 async fn main() {
-    let name = args().nth(1).unwrap();
+    let name = args().next().unwrap();
     let card = get_persona(&name).await.unwrap();
 
     println!("{card}");

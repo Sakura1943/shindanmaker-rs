@@ -7,8 +7,8 @@ A library to visit https://en.shindanmaker.com/917962 or https://en.shindanmaker
 Add dependencies to `Cargo.toml`:
 
 ```toml
-tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread"] }
-shindanmaker-rs = { version = "0.2.9" }
+tokio = { version = "1.28.1", features = ["macros", "rt-multi-thread"] }
+shindanmaker-rs = { version = "0.3.0" }
 ```
 
 
@@ -18,7 +18,7 @@ shindanmaker-rs = { version = "0.2.9" }
 Use the following command to fetch and print diagnosis information:
 
 ```bash
-$ cargo run --example cli <name>
+$ cargo run --example persona <name>
 ```
 
 

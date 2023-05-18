@@ -1,20 +1,23 @@
 mod card;
 
-use std::collections::HashMap;
 use once_cell::sync::Lazy;
-use reqwest::{Client, header::{self, HeaderMap, HeaderValue, USER_AGENT}};
+use reqwest::{
+    header::{self, HeaderMap, HeaderValue, USER_AGENT},
+    Client,
+};
 use scraper::{Html, Selector};
+use std::collections::HashMap;
 
 pub use self::card::Card;
 pub use reqwest::Result;
 
-static ROOT_URL: &'static str = "https://en.shindanmaker.com";
+static ROOT_URL: &str = "https://en.shindanmaker.com";
 // The client to interact with shindanmaker
-static CLIENT: Lazy<Client> = Lazy::new(||{
+static CLIENT: Lazy<Client> = Lazy::new(|| {
     let mut headers = HeaderMap::with_capacity(1);
     headers.insert(
         header::CONTENT_TYPE,
-        HeaderValue::from_static("application/x-www-form-urlencoded")
+        HeaderValue::from_static("application/x-www-form-urlencoded"),
     );
 
     Client::builder()
@@ -42,21 +45,20 @@ pub async fn get_persona(name: &str) -> Result<Card> {
         // filter the text of the element with id shindanName
         if let Some("shindanResult") = element.value().attr("id") {
             // insert item into list
-            for (index, item) in element.text().enumerate() {
+            info_list = element.text().enumerate().map(|(index, item)| {
                 if index == 0 || index == 6 {
-                    info_list.push(item);
+                    item
                 } else {
-                    info_list.push(item.split(":").last().unwrap());
+                    item.split(':').last().unwrap()
                 }
-            }
-
+            }).collect();
             break;
         }
     }
 
     // the simplest style
     Ok(Card {
-        name: name.to_owned(),
+        name: info_list[0].to_owned(),
         sex: info_list[1].to_owned(),
         race: info_list[2].to_owned(),
         character: info_list[3].to_owned(),
@@ -81,27 +83,25 @@ pub async fn get_by_id(page_id: u64, name: &str) -> Result<String> {
     for element in fragment.select(&selector) {
         // filter the text of the element with id shindanName
         if let Some("shindanResult") = element.value().attr("id") {
-            return Ok(element
-                        .text()
-                        .collect::<Vec<&str>>()
-                        .join("\n"));
+            return Ok(element.text().collect::<Vec<&str>>().join("\n"));
         }
     }
 
     unreachable!()
 }
 
-
 // Fetch the diagnosis result as raw html text
 async fn fetch_diagnosis(page_id: u64, name: &str) -> Result<String> {
-    let resp = CLIENT.get(format!("{}/{}", ROOT_URL, page_id))
+    let resp = CLIENT
+        .get(format!("{}/{}", ROOT_URL, page_id))
         .send()
         .await?
         .error_for_status()? // Page doesn't exist
         .text()
         .await?;
 
-    let mut args = HashMap::with_capacity(3);
+    let mut args = HashMap::with_capacity(5);
+    args.insert("type", "name".to_owned());
     args.insert("shindanName", name.to_owned());
 
     // Send Approximation
@@ -116,20 +116,25 @@ async fn fetch_diagnosis(page_id: u64, name: &str) -> Result<String> {
             let element = element.value();
 
             match (element.attr("name"), element.attr("value")) {
-                (Some("_token"), Some(token)) => {
-                    args.insert("_token", token.to_owned());
-                },
+                (Some("shindan_token"), Some(shindan_token)) => {
+                    args.insert("shindan_token", shindan_token.to_owned());
+                }
 
                 (Some("hiddenName"), Some(hidden_name)) => {
                     args.insert("hiddenName", hidden_name.to_owned());
-                },
+                }
+
+                (Some("_token"), Some(token)) => {
+                    args.insert("_token", token.to_owned());
+                }
 
                 _ => continue,
             }
         }
     }
 
-    let resp = CLIENT.post(format!("{ROOT_URL}/{page_id}"))
+    let resp = CLIENT
+        .post(format!("{ROOT_URL}/{page_id}"))
         .json(&args)
         .send()
         .await?
