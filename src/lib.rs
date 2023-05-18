@@ -5,7 +5,7 @@ use reqwest::{
     header::{self, HeaderMap, HeaderValue, USER_AGENT},
     Client,
 };
-use scraper::{Html, Selector};
+use scraper::{ElementRef, Html, Selector};
 use std::collections::HashMap;
 
 pub use self::card::Card;
@@ -38,23 +38,23 @@ pub async fn get_persona(name: &str) -> Result<Card> {
     let selector = Selector::parse("span").unwrap();
 
     // initialize info_list
-    let mut info_list = Vec::new();
 
-    // traverse the list achieved by the selector
-    for element in fragment.select(&selector) {
-        // filter the text of the element with id shindanName
-        if let Some("shindanResult") = element.value().attr("id") {
-            // insert item into list
-            info_list = element.text().enumerate().map(|(index, item)| {
-                if index == 0 || index == 6 {
-                    item
-                } else {
-                    item.split(':').last().unwrap()
-                }
-            }).collect();
-            break;
-        }
-    }
+    let element: Vec<ElementRef> = fragment
+        .select(&selector)
+        .filter(|el| el.value().attr("id").is_some())
+        .collect();
+
+    let info_list = element[0]
+        .text()
+        .enumerate()
+        .map(|(index, item)| {
+            if index == 0 || index == 6 {
+                item
+            } else {
+                item.split(':').last().unwrap()
+            }
+        })
+        .collect::<Vec<&str>>();
 
     // the simplest style
     Ok(Card {
@@ -80,14 +80,12 @@ pub async fn get_by_id(page_id: u64, name: &str) -> Result<String> {
     let selector = Selector::parse("span").unwrap();
 
     // traverse the list achieved by the selector
-    for element in fragment.select(&selector) {
-        // filter the text of the element with id shindanName
-        if let Some("shindanResult") = element.value().attr("id") {
-            return Ok(element.text().collect::<Vec<&str>>().join("\n"));
-        }
-    }
+    let element: Vec<ElementRef> = fragment
+        .select(&selector)
+        .filter(|el| el.value().attr("id").is_some())
+        .collect();
 
-    unreachable!()
+    Ok(element[0].text().collect::<Vec<&str>>().join("\n"))
 }
 
 // Fetch the diagnosis result as raw html text
