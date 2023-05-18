@@ -41,7 +41,7 @@ pub async fn get_persona(name: &str) -> Result<Card> {
 
     let element: Vec<ElementRef> = fragment
         .select(&selector)
-        .filter(|el| el.value().attr("id").is_some())
+        .filter(|el| el.value().attr("id") == Some("shindanResult"))
         .collect();
 
     let info_list = element[0]
@@ -82,7 +82,7 @@ pub async fn get_by_id(page_id: u64, name: &str) -> Result<String> {
     // traverse the list achieved by the selector
     let element: Vec<ElementRef> = fragment
         .select(&selector)
-        .filter(|el| el.value().attr("id").is_some())
+        .filter(|el| el.value().attr("id") == Some("shindanResult"))
         .collect();
 
     Ok(element[0].text().collect::<Vec<&str>>().join("\n"))
